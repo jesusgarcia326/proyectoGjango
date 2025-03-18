@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mi Tenda</title>
+</head>
+<body>
+    <header>
+        <h1><a href="/">Django Girls Blog</a></h1>
+    </header>
+    
+    {% for cliente in clientes_mostrar %}
+        <p>{{ cliente.nombre }}</p>
+    {% endfor %}
+    </body>
+</html>
+
