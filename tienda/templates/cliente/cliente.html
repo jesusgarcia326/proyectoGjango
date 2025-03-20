@@ -1,0 +1,9 @@
+<p>{{ cliente.nombre | capfirst }}</p>
+
+{% if cliente.id == 1 %}
+    Eres el primer cliente {{cliente.nombre}}
+{% elif cliente.id == 2 %}
+    Eres el segundo cliente {{cliente.nombre}}
+{%else %}
+    No eres de los primeros cliente {{cliente.nombre}}
+{%endif%}

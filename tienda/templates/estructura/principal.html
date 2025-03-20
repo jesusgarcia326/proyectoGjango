@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% block titulo %}
+        <title>Mi Tenda Online</title>
+    {% endblock %}
+
+    {% load django_bootstrap5 %}
+    {% bootstrap_css %}
+   
+</head>
+<body>
+    {% include 'estructura/menu.html' %}
+    
+    {% block contenido%}
+    {% endblock %}
+
+    {% include 'estructura/pie.html' %}
+
+    {% bootstrap_javascript %}
+
+</body>

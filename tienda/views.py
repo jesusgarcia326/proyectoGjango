@@ -7,4 +7,7 @@ from .models import Cliente
 def vista_cliente(request):
     listado_clientes= Cliente.objects.all()
     return render(request, 'cliente/vista_cliente.html', {'clientes_mostrar': listado_clientes})
+
+def index(request):
+    return render(request,'index.html',{})
  

@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Mi Tenda</title>
-</head>
-<body>
-    <header>
-        <h1><a href="/">Django Girls Blog</a></h1>
-    </header>
-    
-    {% for cliente in clientes_mostrar %}
-        <p>{{ cliente.nombre }}</p>
-    {% endfor %}
-    </body>
-</html>
+{% extends "estructura/principal.html" %}
+{% block contenido%}
+{% for cliente in clientes_mostrar %}
+
+{% include 'cliente/cliente.html' %}
+
+{% empty %}
+    <p> No hay ningun cliente </p>
+
+{% endfor %}
+{% endblock %}
 
