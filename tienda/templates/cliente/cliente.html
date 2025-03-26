@@ -1,9 +1,14 @@
-<p>{{ cliente.nombre | capfirst }}</p>
-
-{% if cliente.id == 1 %}
-    Eres el primer cliente {{cliente.nombre}}
-{% elif cliente.id == 2 %}
-    Eres el segundo cliente {{cliente.nombre}}
-{%else %}
-    No eres de los primeros cliente {{cliente.nombre}}
-{%endif%}
+<div class="card shadow-sm h-100">
+    <div class="card-body">
+      <h5 class="card-title text-primary">{{ cliente.nombre|capfirst }}</h5>
+      
+      {% if cliente.id == 1 %}
+        <p class="card-text">👑 Eres el <strong>primer cliente</strong>, {{ cliente.nombre }}.</p>
+      {% elif cliente.id == 2 %}
+        <p class="card-text">🥈 Eres el <strong>segundo cliente</strong>, {{ cliente.nombre }}.</p>
+      {% else %}
+        <p class="card-text">🙂 No eres de los primeros, {{ cliente.nombre }}.</p>
+      {% endif %}
+    </div>
+  </div>
+  

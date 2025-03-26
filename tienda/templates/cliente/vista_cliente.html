@@ -1,12 +1,19 @@
 {% extends "estructura/principal.html" %}
-{% block contenido%}
-{% for cliente in clientes_mostrar %}
 
-{% include 'cliente/cliente.html' %}
-
-{% empty %}
-    <p> No hay ningun cliente </p>
-
-{% endfor %}
+{% block contenido %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Listado de Clientes</h2>
+  <div class="row g-4">
+    {% for cliente in clientes_mostrar %}
+      <div class="col-md-4">
+        {% include 'cliente/cliente.html' %}
+      </div>
+    {% empty %}
+      <div class="col-12 text-center">
+        <div class="alert alert-warning">No hay ningún cliente.</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}
 
