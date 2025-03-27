@@ -1,10 +1,12 @@
-
-
-
-<!-- Navbar mejorada con Bootstrap -->
 <nav class="navbar navbar-expand-lg bg-primary navbar-dark shadow-sm sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="#">Tienda</a>
+
+    <!-- Fecha de inicio de sesión -->
+    <span class="text-white ms-3 d-none d-lg-block">
+      🕒 Sesión iniciada: {{ request.session.fecha_inicio }}
+    </span>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -18,7 +20,11 @@
         <li class="nav-item">
           <a class="nav-link" href="{% url 'vista_cliente' %}">📋 Listado de clientes</a>
         </li>
+        <li class="nav-item">
+          <a class="btn btn-outline-warning ms-2" href="{% url 'registrar_usuario' %}">📝 Registrarse</a>
+        </li>
       </ul>
     </div>
   </div>
 </nav>
+
