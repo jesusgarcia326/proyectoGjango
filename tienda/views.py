@@ -25,16 +25,26 @@ def registrar_usuario(request):
     if request.method == 'POST':
         formulario = RegistroForm(request.POST)
         if formulario.is_valid():
-            user = formulario.save()
+            user = formulario.save(commit=False)
+            user.set_password(formulario.cleaned_data['password1'])  # Porque usas UserCreationForm
+            user.save()
+
             rol = int(formulario.cleaned_data.get('rol'))
+
             if rol == Usuario.CLIENTE:
-                grupo = Group.objects.get(name='Clientes')
+                grupo = Group.objects.get(name='clientes')
                 grupo.user_set.add(user)
                 cliente = Cliente.objects.create(usuario=user)
                 cliente.save()
+
+            elif rol == Usuario.VENDEDOR:
+                grupo = Group.objects.get(name='vendedores')
+                grupo.user_set.add(user)
+                vendedor = Vendedor.objects.create(usuario=user)
+                vendedor.save()
+
             return redirect('inicio')
     else:
         formulario = RegistroForm()
 
     return render(request, 'registration/signup.html', {'formulario': formulario})
-

@@ -12,7 +12,7 @@ class Usuario(AbstractUser):
     ROLES = (
         (ADMINISTRADOR, 'administrador'),
         (CLIENTE, 'cliente'),
-        (VENDEDOR, 'bibliotecario'),
+        (VENDEDOR, 'vendedor'),
     )
 
     rol = models.PositiveSmallIntegerField(choices=ROLES, default=ADMINISTRADOR)
