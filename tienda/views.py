@@ -3,6 +3,7 @@ from .models import *
 from datetime import datetime
 from .forms import RegistroForm
 from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import permission_required
 
 
 
@@ -10,9 +11,15 @@ from django.contrib.auth.models import Group
 
 
 # Create your views here.
+@permission_required('tienda.view_cliente')
 def vista_cliente(request):
     listado_clientes= Cliente.objects.all()
     return render(request, 'cliente/vista_cliente.html', {'clientes_mostrar': listado_clientes})
+
+def vista_vendedor(request):
+    listado_vendedores= Vendedor.objects.all()
+    return render(request, 'vendedor/vista_vendedor.html', {'vendedores_mostrar': listado_vendedores})
+
 
 
 def index(request):
@@ -32,13 +39,13 @@ def registrar_usuario(request):
             rol = int(formulario.cleaned_data.get('rol'))
 
             if rol == Usuario.CLIENTE:
-                grupo = Group.objects.get(name='clientes')
+                grupo = Group.objects.get(name='Clientes')
                 grupo.user_set.add(user)
                 cliente = Cliente.objects.create(usuario=user)
                 cliente.save()
 
             elif rol == Usuario.VENDEDOR:
-                grupo = Group.objects.get(name='vendedores')
+                grupo = Group.objects.get(name='Vendedores')
                 grupo.user_set.add(user)
                 vendedor = Vendedor.objects.create(usuario=user)
                 vendedor.save()

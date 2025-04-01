@@ -1,0 +1,13 @@
+<div class="card shadow-sm h-100">
+    <div class="card-body">
+      <h5 class="card-title text-primary">{{ vendedor.usuario.username|capfirst }}</h5>
+      
+      {% if vendedor.id == 1 %}
+        <p class="card-text">👑 Eres el <strong>primer cliente</strong>, {{ vendedor.usuario.username }}.</p>
+      {% elif vendedor.id == 2 %}
+        <p class="card-text">🥈 Eres el <strong>segundo cliente</strong>, {{ vendedor.usuario.username }}.</p>
+      {% else %}
+        <p class="card-text">🙂 No eres de los primeros, {{ vendedor.usuario.username }}.</p>
+      {% endif %}
+    </div>
+  </div>

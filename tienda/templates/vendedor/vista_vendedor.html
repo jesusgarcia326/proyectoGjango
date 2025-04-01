@@ -1,0 +1,18 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Listado de Vendedores</h2>
+  <div class="row g-4">
+    {% for vendedor in vendedor_mostrar %}
+      <div class="col-md-4">
+        {% include 'vendedor/vendedor.html' %}
+      </div>
+    {% empty %}
+      <div class="col-12 text-center">
+        <div class="alert alert-warning">No hay ningún vendedor.</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
