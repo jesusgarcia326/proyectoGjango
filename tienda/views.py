@@ -4,7 +4,7 @@ from datetime import datetime
 from .forms import RegistroForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import permission_required
-
+from .forms import EntradaModelForm
 
 
 # Create your views here.
@@ -23,6 +23,17 @@ def vista_vendedor(request):
 def vista_entradas(request):
     entradas = Entrada.objects.all().order_by('-fecha')
     return render(request, 'entrada/vista_entrada.html', {'entradas': entradas})
+
+def crear_entrada(request):
+    if request.method == 'POST':
+        form = EntradaModelForm(request.POST)
+        if form.is_valid():
+            print("Es valido")
+            form.save()
+            return redirect('vista_entrada')
+    else:
+        form = EntradaModelForm()
+    return render(request, 'formulario_entrada/formulario_entrada.html', {'form': form})
 
 
 def index(request):
