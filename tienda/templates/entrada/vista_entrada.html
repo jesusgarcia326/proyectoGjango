@@ -1,0 +1,11 @@
+<h1>Entradas</h1>
+
+<ul>
+    {% for entrada in entrada %}
+        <li>
+            <strong>{{ entrada.nombre }}</strong> — {{ entrada.fecha }} — {{ entrada.precio }} €
+        </li>
+    {% empty %}
+        <li>No hay entradas disponibles.</li>
+    {% endfor %}
+</ul>

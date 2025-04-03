@@ -20,6 +20,9 @@ def vista_vendedor(request):
     listado_vendedores= Vendedor.objects.all()
     return render(request, 'vendedor/vista_vendedor.html', {'vendedores_mostrar': listado_vendedores})
 
+def vista_entradas(request):
+    entradas = Entrada.objects.all().order_by('-fecha')
+    return render(request, 'entrada/vista_entrada.html', {'entradas': entradas})
 
 
 def index(request):

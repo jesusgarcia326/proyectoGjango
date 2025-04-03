@@ -8,6 +8,7 @@ urlpatterns = [
     path('vendedores/', views.vista_vendedor, name='vista_vendedor'),
     path('', views.index, name="inicio"),
     path('registrar', views.registrar_usuario, name='registrar_usuario'),
+    path('entradas/', views.vista_entradas, name='vista_entrada'),
     
     #path('logout/', auth_views.LogoutView.as_view(next_page='inicio'), name='logout'),
 
