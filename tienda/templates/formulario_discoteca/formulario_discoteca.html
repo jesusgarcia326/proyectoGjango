@@ -1,0 +1,14 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+  <div class="container mt-5">
+    <h2 class="mb-4">Crear discoteca</h2>
+
+    <form action="{% url 'crear_discoteca' %}" method="post">
+      {% load django_bootstrap5 %}
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      {% bootstrap_button "Enviar" button_type="submit" button_class="btn-primary" %}
+    </form>
+  </div>
+{% endblock %}

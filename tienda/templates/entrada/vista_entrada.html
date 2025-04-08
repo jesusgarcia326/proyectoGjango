@@ -1,11 +1,20 @@
-<h1>Entradas</h1>
+{% extends "estructura/principal.html" %}
 
-<ul>
-    {% for entrada in entrada %}
-        <li>
-            <strong>{{ entrada.nombre }}</strong> — {{ entrada.fecha }} — {{ entrada.precio }} €
-        </li>
-    {% empty %}
-        <li>No hay entradas disponibles.</li>
-    {% endfor %}
-</ul>
+{% block titulo %}
+  <title>Entradas</title>
+{% endblock %}
+
+{% block contenido %}
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Entradas</h1>
+    <div class="row g-4">
+      {% for entrada in entradas_mostrar %}
+        <div class="col-md-4">
+          {% include "entrada/entrada.html" %}
+        </div>
+      {% empty %}
+        <div class="alert alert-warning text-center">No hay entradas disponibles.</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

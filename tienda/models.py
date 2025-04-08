@@ -31,4 +31,10 @@ class Entrada(models.Model):
     fecha = models.DateTimeField(default=timezone.now)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
 
+class Discoteca(models.Model):
+    nombre = models.CharField(max_length=100)
+    direccion = models.CharField(max_length=200)
+    aforo = models.IntegerField()
+   
+
 

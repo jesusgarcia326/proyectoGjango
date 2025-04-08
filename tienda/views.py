@@ -4,7 +4,8 @@ from datetime import datetime
 from .forms import RegistroForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import permission_required
-from .forms import EntradaModelForm
+from .forms import *
+
 
 
 # Create your views here.
@@ -22,7 +23,8 @@ def vista_vendedor(request):
 
 def vista_entradas(request):
     entradas = Entrada.objects.all().order_by('-fecha')
-    return render(request, 'entrada/vista_entrada.html', {'entradas': entradas})
+    return render(request, 'entrada/vista_entrada.html', {'entradas_mostrar': entradas})
+
 
 def crear_entrada(request):
     if request.method == 'POST':
@@ -35,11 +37,26 @@ def crear_entrada(request):
         form = EntradaModelForm()
     return render(request, 'formulario_entrada/formulario_entrada.html', {'form': form})
 
+def vista_discoteca(request):
+    listado_discotecas = Discoteca.objects.all()
+    return render(request, 'discoteca/vista_discoteca.html', {'discotecas_mostrar': listado_discotecas})
+
+def crear_discoteca(request):
+    if request.method == 'POST':
+        form = DiscotecaModelForm(request.POST)
+        if form.is_valid():
+            print("Es valido")
+            form.save()
+            return render(request, 'discoteca/vista_discoteca.html')
+
+    else:
+        form = DiscotecaModelForm()
+    return render(request, 'formulario_discoteca/formulario_discoteca.html', {'form': form})
+
 
 def index(request):
     if("fecha_inicio" not in request.session):
-        request.session["fecha_inicio"] = datetime.now().strftime('%d/%m/%Y %H:%M')
-
+        request.session["fecha_inicio"] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
     return render(request, 'index.html')
 
 def registrar_usuario(request):

@@ -1,0 +1,20 @@
+{% extends "estructura/principal.html" %}
+
+{% block titulo %}
+  <title>Discotecas</title>
+{% endblock %}
+
+{% block contenido %}
+  <div class="container mt-5">
+    <h1 class="mb-4 text-center">Discotecas</h1>
+    <div class="row g-4">
+      {% for discoteca in discotecas_mostrar %}
+        <div class="col-md-4">
+          {% include "discoteca/discoteca.html" %}
+        </div>
+      {% empty %}
+        <div class="alert alert-warning text-center">No hay discotecas disponibles.</div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

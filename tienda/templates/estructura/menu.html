@@ -19,19 +19,27 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'vista_entrada' %}"> Entradas</a>
+          <a class="nav-link active" href="{% url 'vista_discoteca' %}"> Discotecas</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'crear_discoteca' %}"> Crear discoteca</a>
         </li>
 
         <li class="nav-item">
-          <a href="{% url 'crear_entrada' %}">Crear entrada</a>
+          <a class="nav-link active" href="{% url 'vista_entrada' %}"> Entradas</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'vista_cliente' %}"> Listado de clientes</a>
+          <a class="nav-link active" href="{% url 'crear_entrada' %}"> Crear entrada</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'vista_vendedor' %}"> Listado de vendedores</a>
+          <a class="nav-link active" href="{% url 'vista_cliente' %}"> Listado de clientes</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'vista_vendedor' %}"> Listado de vendedores</a>
         </li>
         
         {% if request.user.is_authenticated %}
