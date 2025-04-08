@@ -5,6 +5,7 @@ from .forms import RegistroForm
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import permission_required
 from .forms import *
+from django.contrib import messages #esto para los mensajes cuando eduitas o haces algo 
 
 
 
@@ -32,10 +33,36 @@ def crear_entrada(request):
         if form.is_valid():
             print("Es valido")
             form.save()
+            messages.success(request,"Se ha creado una entrda")
             return redirect('vista_entrada')
     else:
         form = EntradaModelForm()
     return render(request, 'formulario_entrada/formulario_entrada.html', {'form': form})
+
+
+def dame_entrada(request,pepito):
+    entradas = Entrada.objects.get(id=pepito)
+    return render(request, 'entrada/dame_entrada.html', {'entrada': entradas})
+
+
+
+def editar_entrada (request,pepito):
+    entrada = Entrada.objects.get(id=pepito)
+    if request.method == 'POST':
+        form = EntradaModelForm(request.POST,instance=entrada)
+        if form.is_valid():
+            try:
+                print("Es válido")
+                form.save()
+                messages.success(request,"Se ha editado una entrda")
+                return redirect('dame_entrada', pepito=pepito)
+            except Exception as capturo_error:
+                print("Error al guardar:", capturo_error)
+    else:
+        form = EntradaModelForm(instance=entrada)
+    return render(request, 'entrada/editar_entrada.html', {'form': form, "entrada": entrada})
+
+
 
 def vista_discoteca(request):
     listado_discotecas = Discoteca.objects.all()
@@ -47,6 +74,7 @@ def crear_discoteca(request):
         if form.is_valid():
             print("Es valido")
             form.save()
+            messages.success(request,"Se ha creado una discoteca")
             return render(request, 'discoteca/vista_discoteca.html')
 
     else:

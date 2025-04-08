@@ -11,6 +11,7 @@
       {% for entrada in entradas_mostrar %}
         <div class="col-md-4">
           {% include "entrada/entrada.html" %}
+          <a href="{% url 'dame_entrada' entrada.id %}" class="btn btn-outline-info">Ver más</a>
         </div>
       {% empty %}
         <div class="alert alert-warning text-center">No hay entradas disponibles.</div>

@@ -4,6 +4,13 @@
       <p class="card-text">
         Fecha: {{ entrada.fecha }}<br>
         Precio: {{ entrada.precio }} €
+        <button type="button" 
+        class="btn btn-outline-primary">
+         <a href="{% url 'editar_entrada' entrada.id %}">Editar
+          <span class="bs_icon pencil"></span>
+         </a>
+        </button>
       </p>
-    </div>
-  </div>
+      
+
+   </div>

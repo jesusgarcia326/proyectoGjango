@@ -1,0 +1,9 @@
+{% extends 'estructura/principal.html' %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h1 class="mb-4 text-center">Entrada</h1>
+    {% include "entrada/entrada.html" %}
+   <!-- <a href="{% url 'editar_entrada' entrada.id %}" class="btn btn-outline-info">Ver más</a>-->
+</div>
+{% endblock %}
