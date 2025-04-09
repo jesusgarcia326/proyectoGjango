@@ -81,6 +81,26 @@ def crear_discoteca(request):
         form = DiscotecaModelForm()
     return render(request, 'formulario_discoteca/formulario_discoteca.html', {'form': form})
 
+def dame_discoteca(request,jaimito):
+    discoteca = Discoteca.objects.get(id=jaimito)
+    return render(request, 'discoteca/dame_discoteca.html', {'discoteca': discoteca})
+
+def editar_discoteca (request,jaimito):
+    discoteca = Discoteca.objects.get(id=jaimito)
+    if request.method == 'POST':
+        form = DiscotecaModelForm(request.POST,instance=discoteca)
+        if form.is_valid():
+            try:
+                print("Es válido")
+                form.save()
+                messages.success(request,"Se ha editado la discoteca")
+                return redirect('dame_discoteca', jaimito=jaimito)
+            except Exception as capturo_error:
+                print("Error al guardar:", capturo_error)
+    else:
+        form = DiscotecaModelForm(instance=discoteca)
+    return render(request, 'discoteca/editar_discoteca.html', {'form': form, "discoteca": discoteca})
+
 
 def index(request):
     if("fecha_inicio" not in request.session):

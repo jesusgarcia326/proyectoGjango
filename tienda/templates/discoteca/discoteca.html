@@ -4,6 +4,12 @@
       <p class="card-text">
         Dirección: {{ discoteca.direccion }}<br>
         Aforo: {{ discoteca.aforo }} porsonas
+        <button type="button" 
+        class="btn btn-outline-primary">
+         <a href="{% url 'editar_discoteca' discoteca.id %}">Editar
+          <span class="bs_icon pencil"></span>
+         </a>
+        </button>
       </p>
     </div>
   </div>

@@ -11,6 +11,7 @@
       {% for discoteca in discotecas_mostrar %}
         <div class="col-md-4">
           {% include "discoteca/discoteca.html" %}
+          <a href="{% url 'dame_discoteca' discoteca.id %}" class="btn btn-outline-info">Ver más</a>
         </div>
       {% empty %}
         <div class="alert alert-warning text-center">No hay discotecas disponibles.</div>

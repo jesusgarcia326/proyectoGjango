@@ -14,6 +14,8 @@ urlpatterns = [
     path('discotecas/', views.vista_discoteca, name='vista_discoteca'),
     path('entrada/<int:pepito>', views.dame_entrada, name='dame_entrada'),
     path('entrada/<int:pepito>/editar', views.editar_entrada, name='editar_entrada'),
+    path('discoteca/<int:jaimito>', views.dame_discoteca, name='dame_discoteca'),
+    path('discoteca/<int:jaimito>/editar', views.editar_discoteca, name='editar_discoteca'),
     
     #path('logout/', auth_views.LogoutView.as_view(next_page='inicio'), name='logout'),
 
