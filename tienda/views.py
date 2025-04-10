@@ -18,6 +18,11 @@ def vista_cliente(request):
     listado_clientes= Cliente.objects.all()
     return render(request, 'cliente/vista_cliente.html', {'clientes_mostrar': listado_clientes})
 
+def perfil_cliente(request,cliente_id):
+    banco= Banco.objects.filter(nombre=cliente_id).first
+    return render(request, 'cliente/perfil_cliente.html'),{'cuenta_bancaria': banco}
+   
+
 def vista_vendedor(request):
     listado_vendedores= Vendedor.objects.all()
     return render(request, 'vendedor/vista_vendedor.html', {'vendedores_mostrar': listado_vendedores})
@@ -62,7 +67,15 @@ def editar_entrada (request,pepito):
         form = EntradaModelForm(instance=entrada)
     return render(request, 'entrada/editar_entrada.html', {'form': form, "entrada": entrada})
 
+def eliminar_entrada (request,entrada_id):
+    entrada = Entrada.objects.get(id=entrada_id)
+    try:
+        entrada.delete
+        messages.success(request,"Se ha eliminado la entrada")
 
+    except Exception as capturo_error:
+        print(capturo_error)
+    return redirect('vista_entrada')
 
 def vista_discoteca(request):
     listado_discotecas = Discoteca.objects.all()

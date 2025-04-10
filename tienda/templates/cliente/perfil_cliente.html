@@ -1,0 +1,16 @@
+
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+
+<h2>Mi perfil</h2>
+
+{% if cuenta %}
+    <h4>Cuenta bancaria</h4>
+    <p><strong>Banco:</strong> {{ cuenta.banco }}</p>
+    <p><strong>IBAN:</strong> {{ cuenta.IBAN }}</p>
+  {% else %}
+    <p>No tienes una cuenta bancaria registrada.</p>
+{% endif %}
+
+{% endblock %}

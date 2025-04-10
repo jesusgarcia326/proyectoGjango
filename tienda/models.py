@@ -36,5 +36,18 @@ class Discoteca(models.Model):
     direccion = models.CharField(max_length=200)
     aforo = models.IntegerField()
    
-
+class Banco(models.Model):
+    cliente = models.OneToOneField(Cliente, on_delete = models.CASCADE)
+    banco= models.CharField(max_length=100)
+    IBAN= models.CharField(max_length=100)
+    MONEDAS = [
+        ("EU","Euro"),
+        ("DOL","Dolar"),
+        ("LIB","Libra"),
+    ]
+    moneda = models.CharField(
+        max_length=3,
+        choices=MONEDAS,
+        default="EU"
+    )
 

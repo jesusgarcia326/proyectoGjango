@@ -10,6 +10,12 @@
           <span class="bs_icon pencil"></span>
          </a>
         </button>
+        <form action="{% url 'eliminar_entrada' entrada.id %}" method="post">
+          {% csrf_token %}
+          <button class="btn btn-danger" onclick="return eliminar();"type="submit">
+            <span class="trash">Eliminar</span>
+          </button>
+        </form>
       </p>
     </div>
 </div>

@@ -4,10 +4,11 @@
     {% block titulo %}
         <title>Mi Tenda Online</title>
     {% endblock %}
-
+    {% load static %}
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
-   
+    
+    <script type="text/javascript" src="{% static 'javascript/principal.js' %}"></script>
 </head>
 <body>
     {% include 'estructura/menu.html' %}
