@@ -82,8 +82,12 @@ def crear_discoteca(request):
     if request.method == 'POST':
         form = DiscotecaModelForm(request.POST)
         if form.is_valid():
-            print("Es valido")
-            form.save()
+            Discoteca.objects.create(
+                nombre = form.cleaned_data.get("nombre")
+                direccion = from.cleaned_data.get("direccion")
+                aforo = from.cleaned_data.get("aforo")
+                vendedor = request.user.vendedor
+            )
             messages.success(request,"Se ha creado una discoteca")
             return render(request, 'discoteca/vista_discoteca.html')
 
@@ -152,7 +156,7 @@ def perfil_cliente(request):
         cliente = request.user.cliente
     except Cliente.DoesNotExist:
         messages.error(request, "No tienes un perfil de cliente.")
-        return redirect('home')
+        return redirect('inicio')
 
     banco = Banco.objects.filter(cliente=cliente).first()
 
@@ -177,13 +181,22 @@ def crear_banco(request):
     if request.method == 'POST':
         form = BancoModelForm(request.POST)
         if form.is_valid():
-            banco = form.save(commit=False)
-            banco.cliente = request.user.cliente
-            banco.save()
-            messages.success(request, "Cuenta bancaria creada correctamente")
-            return redirect('perfil_cliente')
+            try:
+                banco = Banco.objects.create(
+                    banco=form.cleaned_data.get('banco'),
+                    IBAN=form.cleaned_data.get('IBAN'),
+                    moneda=form.cleaned_data.get('moneda'),
+                    cliente=request.user.cliente
+                )
+                banco.save()
+                messages.success(request, "Cuenta bancaria creada correctamente")
+                return redirect('perfil_cliente')
+            except Exception as error:
+                print(error)
+                messages.error(request, "Ha ocurrido un error al crear la cuenta bancaria")
     else:
         form = BancoModelForm()
+
     return render(request, 'banco/crear_banco.html', {'form': form})
 
 
@@ -213,13 +226,21 @@ def crear_datos_vendedor(request):
     if request.method == 'POST':
         form = DatosVendedorModelForm(request.POST)
         if form.is_valid():
-            datos = form.save(commit=False)
-            datos.vendedor = request.user.vendedor  # Asumiendo que estás logueado como vendedor
-            datos.save()
-            messages.success(request, "Datos creados correctamente")
-            return redirect('perfil_vendedor')  
+            try:
+                datos = DatosVendedor.objects.create(
+                    direccion=form.cleaned_data.get('direccion'),
+                    facturacion=form.cleaned_data.get('facturacion'),
+                    vendedor=request.user.vendedor  # Asegúrate que el usuario tiene un vendedor asociado
+                )
+                datos.save()
+                messages.success(request, "Datos del vendedor creados correctamente")
+                return redirect('perfil_vendedor')
+            except Exception as error:
+                print(error)
+                messages.error(request, "Ha ocurrido un error al guardar los datos del vendedor")
     else:
         form = DatosVendedorModelForm()
+
     return render(request, 'datos_vendedor/crear.html', {'form': form})
 
 def vista_datos_vendedor(request):
@@ -245,3 +266,8 @@ def eliminar_datos_vendedor(request, datos_id):
     datos.delete()
     messages.success(request, "Datos eliminados correctamente")
     return redirect('perfil_vendedor')
+
+
+
+def mi_error_404(request,exception=None):
+    return render(request, 'errores/404.html',None,None,404)

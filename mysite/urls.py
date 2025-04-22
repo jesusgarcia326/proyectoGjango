@@ -24,3 +24,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),# Esto es lo del loguin 
     
 ]
+
+from django.conf.urls import handler404
+handler404 = "tienda.views.mi_error_404"

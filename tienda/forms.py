@@ -64,6 +64,7 @@ class DiscotecaModelForm(ModelForm):
             "nombre":("Nombre de la discoteca"),
             "direccion":("Direccion de la discoteca"),
             "aforo":("Aforo de la discoteca")
+            
         }
         help_texts = {
             "nombre":("Nombre corto y decriptivo"),

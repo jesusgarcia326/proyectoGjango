@@ -22,6 +22,7 @@ class Vendedor(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     
     
+    
 class Cliente(models.Model):
     # nombre = models.CharField(max_length=100)
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
@@ -35,6 +36,8 @@ class Discoteca(models.Model):
     nombre = models.CharField(max_length=100)
     direccion = models.CharField(max_length=200)
     aforo = models.IntegerField()
+    
+    vendedor = models.ForeignKey(Vendedor,on_delete= models.CASCADE,default=None,null=True)
    
 class Banco(models.Model):
     cliente = models.OneToOneField(Cliente, on_delete = models.CASCADE)
