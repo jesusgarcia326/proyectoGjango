@@ -17,7 +17,16 @@ urlpatterns = [
     path('discoteca/<int:jaimito>', views.dame_discoteca, name='dame_discoteca'),
     path('discoteca/<int:jaimito>/editar', views.editar_discoteca, name='editar_discoteca'),
     path('entrada/<int:entrada_id>/elimiar', views.eliminar_entrada, name='eliminar_entrada'),
-    path('perfil/<int:cliente_id>', views.perfil_cliente, name='perfil_cliente'),
+    path('perfil/cliente/', views.perfil_cliente, name='perfil_cliente'),  # nueva
+    path('perfil/vendedor/', views.perfil_vendedor, name='perfil_vendedor'),  # nueva
+    path('banco/crear', views.crear_banco, name='crear_banco'),
+    path('banco/<int:banco_id>/editar', views.editar_banco, name='editar_banco'),
+    path('banco/<int:banco_id>/eliminar', views.eliminar_banco, name='eliminar_banco'),
+    path('datosvendedor/', views.vista_datos_vendedor, name='vista_datos_vendedor'),
+    path('datosvendedor/crear', views.crear_datos_vendedor, name='crear_datos_vendedor'),
+    path('datosvendedor/<int:datos_id>/editar', views.editar_datos_vendedor, name='editar_datos_vendedor'),
+    path('datosvendedor/<int:datos_id>/eliminar', views.eliminar_datos_vendedor, name='eliminar_datos_vendedor'),
+
     
     #path('logout/', auth_views.LogoutView.as_view(next_page='inicio'), name='logout'),
 

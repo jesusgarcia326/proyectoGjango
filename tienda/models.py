@@ -51,3 +51,7 @@ class Banco(models.Model):
         default="EU"
     )
 
+class DatosVendedor(models.Model):
+    vendedor = models.OneToOneField(Vendedor, on_delete=models.CASCADE)
+    direccion = models.CharField(max_length=255)
+    facturacion = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)   

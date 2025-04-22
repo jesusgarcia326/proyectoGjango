@@ -1,0 +1,22 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Perfil de Cliente</h2>
+
+  <p><strong>Nombre:</strong> {{ request.user.username }}</p>
+  <p><strong>Email:</strong> {{ request.user.email }}</p>
+
+  {% if banco %}
+    <h4 class="mt-4">Cuenta Bancaria</h4>
+    <p><strong>Banco:</strong> {{ banco.banco }}</p>
+    <p><strong>IBAN:</strong> {{ banco.IBAN }}</p>
+    <p><strong>Moneda:</strong> {{ banco.moneda }}</p>
+    <a class="btn btn-outline-primary" href="{% url 'editar_banco' banco.id %}">Editar</a>
+    <a class="btn btn-danger" href="{% url 'eliminar_banco' banco.id %}">Eliminar</a>
+  {% else %}
+    <div class="alert alert-info mt-3">No tienes cuenta bancaria.</div>
+    <a class="btn btn-primary" href="{% url 'crear_banco' %}">Crear cuenta bancaria</a>
+  {% endif %}
+</div>
+{% endblock %}

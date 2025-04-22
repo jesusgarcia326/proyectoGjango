@@ -18,10 +18,7 @@ def vista_cliente(request):
     listado_clientes= Cliente.objects.all()
     return render(request, 'cliente/vista_cliente.html', {'clientes_mostrar': listado_clientes})
 
-def perfil_cliente(request,cliente_id):
-    banco= Banco.objects.filter(nombre=cliente_id).first
-    return render(request, 'cliente/perfil_cliente.html'),{'cuenta_bancaria': banco}
-   
+
 
 def vista_vendedor(request):
     listado_vendedores= Vendedor.objects.all()
@@ -70,7 +67,7 @@ def editar_entrada (request,pepito):
 def eliminar_entrada (request,entrada_id):
     entrada = Entrada.objects.get(id=entrada_id)
     try:
-        entrada.delete
+        entrada.delete()
         messages.success(request,"Se ha eliminado la entrada")
 
     except Exception as capturo_error:
@@ -147,3 +144,104 @@ def registrar_usuario(request):
         formulario = RegistroForm()
 
     return render(request, 'registration/signup.html', {'formulario': formulario})
+
+
+
+def perfil_cliente(request):
+    try:
+        cliente = request.user.cliente
+    except Cliente.DoesNotExist:
+        messages.error(request, "No tienes un perfil de cliente.")
+        return redirect('home')
+
+    banco = Banco.objects.filter(cliente=cliente).first()
+
+    return render(request, 'perfil/perfil_cliente.html', {
+        'cliente': cliente,
+        'banco': banco
+    })
+
+def perfil_vendedor(request):
+    try:
+        vendedor = request.user.vendedor
+        datos = DatosVendedor.objects.get(vendedor=vendedor)
+    except (DatosVendedor.DoesNotExist, AttributeError):
+        datos = None
+
+    return render(request, 'perfil/perfil_vendedor.html', {
+        'datos': datos
+    })
+
+
+def crear_banco(request):
+    if request.method == 'POST':
+        form = BancoModelForm(request.POST)
+        if form.is_valid():
+            banco = form.save(commit=False)
+            banco.cliente = request.user.cliente
+            banco.save()
+            messages.success(request, "Cuenta bancaria creada correctamente")
+            return redirect('perfil_cliente')
+    else:
+        form = BancoModelForm()
+    return render(request, 'banco/crear_banco.html', {'form': form})
+
+
+def editar_banco(request, banco_id):
+    banco = Banco.objects.get(id=banco_id)
+    if request.method == 'POST':
+        form = BancoModelForm(request.POST, instance=banco)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Cuenta bancaria actualizada correctamente")
+            return redirect('perfil_cliente')
+    else:
+        form = BancoModelForm(instance=banco)
+    return render(request, 'banco/editar_banco.html', {'form': form})
+
+
+
+def eliminar_banco(request, banco_id):
+    banco = Banco.objects.get(id=banco_id)
+    cliente_id = banco.cliente.id
+    banco.delete()
+    messages.success(request, "Cuenta bancaria eliminada correctamente")
+    return redirect('perfil_cliente')
+
+
+def crear_datos_vendedor(request):
+    if request.method == 'POST':
+        form = DatosVendedorModelForm(request.POST)
+        if form.is_valid():
+            datos = form.save(commit=False)
+            datos.vendedor = request.user.vendedor  # Asumiendo que estás logueado como vendedor
+            datos.save()
+            messages.success(request, "Datos creados correctamente")
+            return redirect('perfil_vendedor')  
+    else:
+        form = DatosVendedorModelForm()
+    return render(request, 'datos_vendedor/crear.html', {'form': form})
+
+def vista_datos_vendedor(request):
+    datos = DatosVendedor.objects.all()
+    return render(request, 'datos_vendedor/vista.html', {'datos_vendedor': datos})
+
+
+def editar_datos_vendedor(request, datos_id):
+    datos = DatosVendedor.objects.get(id=datos_id)
+    if request.method == 'POST':
+        form = DatosVendedorModelForm(request.POST, instance=datos)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Datos actualizados correctamente")
+            return redirect('perfil_vendedor')
+    else:
+        form = DatosVendedorModelForm(instance=datos)
+    return render(request, 'datos_vendedor/editar.html', {'form': form})
+
+
+def eliminar_datos_vendedor(request, datos_id):
+    datos = DatosVendedor.objects.get(id=datos_id)
+    datos.delete()
+    messages.success(request, "Datos eliminados correctamente")
+    return redirect('perfil_vendedor')

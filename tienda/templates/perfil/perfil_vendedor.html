@@ -1,0 +1,17 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Perfil de Vendedor</h2>
+
+  {% if datos %}
+    <p><strong>Dirección:</strong> {{ datos.direccion }}</p>
+    <p><strong>Facturación:</strong> {{ datos.facturacion }}</p>
+    <a class="btn btn-outline-primary" href="{% url 'editar_datos_vendedor' datos.id %}">Editar</a>
+    <a class="btn btn-danger" href="{% url 'eliminar_datos_vendedor' datos.id %}">Eliminar</a>
+  {% else %}
+    <div class="alert alert-info">No tienes datos de vendedor aún.</div>
+    <a class="btn btn-primary" href="{% url 'crear_datos_vendedor' %}">Crear datos de vendedor</a>
+  {% endif %}
+</div>
+{% endblock %}

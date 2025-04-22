@@ -88,3 +88,33 @@ class DiscotecaModelForm(ModelForm):
             self.add_error('aforo', 'pa tener ese aforo crea un bar, pisha')
 
         return cleaned_data
+
+
+class BancoModelForm(forms.ModelForm):
+    class Meta:
+        model = Banco
+        fields = ['banco', 'IBAN', 'moneda']
+        labels = {
+            'banco': 'Entidad bancaria',
+            'IBAN': 'Número IBAN',
+            'moneda': 'Tipo de moneda',
+        }
+        widgets = {
+            'banco': forms.TextInput(attrs={'class': 'form-control'}),
+            'IBAN': forms.TextInput(attrs={'class': 'form-control'}),
+            'moneda': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+
+class DatosVendedorModelForm(ModelForm):
+    class Meta:
+        model = DatosVendedor
+        fields = ['direccion', 'facturacion']
+        labels = {
+            'direccion': 'Dirección',
+            'facturacion': 'Facturación'
+        }
+        widgets = {
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'facturacion': forms.NumberInput(attrs={'class': 'form-control'}),
+        }

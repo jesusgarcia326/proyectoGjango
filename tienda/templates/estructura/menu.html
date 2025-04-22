@@ -19,65 +19,69 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'vista_discoteca' %}"> Discotecas</a>
-        </li>
-        
-        <li class="nav-item">
-          <a class="nav-link active" href="{% url 'crear_discoteca' %}"> Crear discoteca</a>
+          <a class="nav-link active" href="{% url 'vista_discoteca' %}">Discotecas</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'vista_entrada' %}"> Entradas</a>
+          <a class="nav-link active" href="{% url 'crear_discoteca' %}">Crear discoteca</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'crear_entrada' %}"> Crear entrada</a>
+          <a class="nav-link active" href="{% url 'vista_entrada' %}">Entradas</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'vista_cliente' %}"> Listado de clientes</a>
+          <a class="nav-link active" href="{% url 'crear_entrada' %}">Crear entrada</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link active" href="{% url 'vista_vendedor' %}"> Listado de vendedores</a>
+          <a class="nav-link active" href="{% url 'vista_cliente' %}">Listado de clientes</a>
         </li>
 
-        {% if request.user.rol == 2 %}
         <li class="nav-item">
-        <a class="nav-link active" href="{% url 'perfil_cliente' request.user.cliente.id %}">Mi perfil</a>
-        </li> 
-        {% endif %}
+          <a class="nav-link active" href="{% url 'vista_vendedor' %}">Listado de vendedores</a>
+        </li>
 
         {% if request.user.is_authenticated %}
-        <li class="nav-item">
-          <span class="nav-link text-white">
-             {{ request.user.username }} 
-            {% if request.user.rol == 2 %}(Cliente){% elif request.user.rol == 3 %}(Vendedor){% endif %}
-          </span>
-        </li>
+          {% if request.user.rol == 2 %}
+            <!-- Solo cliente -->
+            <li class="nav-item">
+              <a class="btn btn-outline-light me-2" href="{% url 'perfil_cliente' %}">Perfil Cliente</a>
+            </li>
+          {% elif request.user.rol == 3 %}
+            <!-- Solo vendedor -->
+            <li class="nav-item">
+              <a class="btn btn-outline-light me-2" href="{% url 'perfil_vendedor' %}">Perfil Vendedor</a>
+            </li>
+          {% endif %}
 
-        <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-outline-danger ms-2">
-               Cerrar sesión
-            </button>
-          </form>
-        </li>
+          <!-- Usuario actual -->
+          <li class="nav-item">
+            <span class="nav-link text-white">
+              {{ request.user.username }}
+              {% if request.user.rol == 2 %}(Cliente){% elif request.user.rol == 3 %}(Vendedor){% endif %}
+            </span>
+          </li>
 
-      {% else %}
-        <li class="nav-item">
-          <a class="btn btn-outline-warning" href="{% url 'login' %}"> Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="btn btn-outline-warning ms-2" href="{% url 'registrar_usuario' %}"> Registrarse</a>
-        </li>
-      {% endif %}
-
+          <!-- Cerrar sesión -->
+          <li class="nav-item">
+            <form method="post" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger ms-2">
+                Cerrar sesión
+              </button>
+            </form>
+          </li>
+        {% else %}
+          <!-- Botones de login y registro -->
+          <li class="nav-item">
+            <a class="btn btn-outline-warning" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-outline-warning ms-2" href="{% url 'registrar_usuario' %}">Registrarse</a>
+          </li>
+        {% endif %}
       </ul>
     </div>
   </div>
 </nav>
-
-
-
