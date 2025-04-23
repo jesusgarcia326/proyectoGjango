@@ -27,7 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost', '127.0.0.1:8080']
 
-
+HANDLER404 = 'tienda.views.mi_error_404'
+HANDLER500 = 'tienda.views.mi_error_500'
 # Application definition
 
 INSTALLED_APPS = [

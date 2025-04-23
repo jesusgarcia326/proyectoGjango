@@ -10,7 +10,7 @@
       {% bootstrap_form form %}
       <div class="mt-3">
         {% bootstrap_button "Guardar datos" button_type="submit" button_class="btn-success" %}
-        <a href="{% url 'perfil_vendedor' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'perfil_vendedor' id_vendedor=request.user.vendedor.id %} class="btn btn-secondary">Cancelar</a>
       </div>
     </form>
   </div>

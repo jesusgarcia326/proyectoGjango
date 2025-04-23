@@ -6,6 +6,9 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import permission_required
 from .forms import *
 from django.contrib import messages #esto para los mensajes cuando eduitas o haces algo 
+from django.contrib.auth import login
+from django.http import Http404
+
 
 
 
@@ -83,11 +86,11 @@ def crear_discoteca(request):
         form = DiscotecaModelForm(request.POST)
         if form.is_valid():
             Discoteca.objects.create(
-                nombre = form.cleaned_data.get("nombre")
-                direccion = from.cleaned_data.get("direccion")
-                aforo = from.cleaned_data.get("aforo")
+                nombre = form.cleaned_data.get("nombre"),
+                direccion = form.cleaned_data.get("direccion"),
+                aforo = form.cleaned_data.get("aforo"),
                 vendedor = request.user.vendedor
-            )
+)
             messages.success(request,"Se ha creado una discoteca")
             return render(request, 'discoteca/vista_discoteca.html')
 
@@ -125,10 +128,7 @@ def registrar_usuario(request):
     if request.method == 'POST':
         formulario = RegistroForm(request.POST)
         if formulario.is_valid():
-            user = formulario.save(commit=False)
-            user.set_password(formulario.cleaned_data['password1'])  # Porque usas UserCreationForm
-            user.save()
-
+            user = formulario.save()  # Guarda directamente el usuario
             rol = int(formulario.cleaned_data.get('rol'))
 
             if rol == Usuario.CLIENTE:
@@ -143,6 +143,7 @@ def registrar_usuario(request):
                 vendedor = Vendedor.objects.create(usuario=user)
                 vendedor.save()
 
+            login(request, user)  # Inicia sesión directamente
             return redirect('inicio')
     else:
         formulario = RegistroForm()
@@ -151,30 +152,31 @@ def registrar_usuario(request):
 
 
 
-def perfil_cliente(request):
+def perfil_cliente(request, id_cliente):
+    if request.user.cliente.id == id_cliente:
+        cliente = Cliente.objects.get(id=id_cliente)
+        banco = Banco.objects.filter(cliente=cliente).first()
+        return render(request, 'perfil/perfil_cliente.html', {
+            'cliente': cliente,
+            'banco': banco
+        })
+    else:
+        raise Http404()
+
+def perfil_vendedor(request, id_vendedor):
     try:
-        cliente = request.user.cliente
-    except Cliente.DoesNotExist:
-        messages.error(request, "No tienes un perfil de cliente.")
-        return redirect('inicio')
+        if request.user.vendedor.id == id_vendedor:
+            vendedor = Vendedor.objects.get(id=id_vendedor)
+            datos = DatosVendedor.objects.filter(vendedor=vendedor).first()
 
-    banco = Banco.objects.filter(cliente=cliente).first()
-
-    return render(request, 'perfil/perfil_cliente.html', {
-        'cliente': cliente,
-        'banco': banco
-    })
-
-def perfil_vendedor(request):
-    try:
-        vendedor = request.user.vendedor
-        datos = DatosVendedor.objects.get(vendedor=vendedor)
-    except (DatosVendedor.DoesNotExist, AttributeError):
-        datos = None
-
-    return render(request, 'perfil/perfil_vendedor.html', {
-        'datos': datos
-    })
+            return render(request, 'perfil/perfil_vendedor.html', {
+                'datos': datos,
+                'vendedor': vendedor
+            })
+        else:
+            raise Http404()
+    except Vendedor.DoesNotExist:
+        raise Http404()
 
 
 def crear_banco(request):
@@ -190,7 +192,7 @@ def crear_banco(request):
                 )
                 banco.save()
                 messages.success(request, "Cuenta bancaria creada correctamente")
-                return redirect('perfil_cliente')
+                return redirect('perfil_cliente',id_cliente=request.user.cliente.id)
             except Exception as error:
                 print(error)
                 messages.error(request, "Ha ocurrido un error al crear la cuenta bancaria")
@@ -207,7 +209,7 @@ def editar_banco(request, banco_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Cuenta bancaria actualizada correctamente")
-            return redirect('perfil_cliente')
+            return redirect('perfil_cliente',id_cliente=request.user.cliente.id)
     else:
         form = BancoModelForm(instance=banco)
     return render(request, 'banco/editar_banco.html', {'form': form})
@@ -219,7 +221,7 @@ def eliminar_banco(request, banco_id):
     cliente_id = banco.cliente.id
     banco.delete()
     messages.success(request, "Cuenta bancaria eliminada correctamente")
-    return redirect('perfil_cliente')
+    return redirect('perfil_cliente',id_cliente=request.user.cliente.id)
 
 
 def crear_datos_vendedor(request):
@@ -234,7 +236,7 @@ def crear_datos_vendedor(request):
                 )
                 datos.save()
                 messages.success(request, "Datos del vendedor creados correctamente")
-                return redirect('perfil_vendedor')
+                return redirect('perfil_vendedor',id_vendedor=request.user.vendedor.id)
             except Exception as error:
                 print(error)
                 messages.error(request, "Ha ocurrido un error al guardar los datos del vendedor")
@@ -255,7 +257,7 @@ def editar_datos_vendedor(request, datos_id):
         if form.is_valid():
             form.save()
             messages.success(request, "Datos actualizados correctamente")
-            return redirect('perfil_vendedor')
+            return redirect('perfil_vendedor',id_vendedor=request.user.vendedor.id)
     else:
         form = DatosVendedorModelForm(instance=datos)
     return render(request, 'datos_vendedor/editar.html', {'form': form})
@@ -265,9 +267,11 @@ def eliminar_datos_vendedor(request, datos_id):
     datos = DatosVendedor.objects.get(id=datos_id)
     datos.delete()
     messages.success(request, "Datos eliminados correctamente")
-    return redirect('perfil_vendedor')
+    return redirect('perfil_vendedor',id_vendedor=request.user.vendedor.id)
 
 
-
+#ERORES
 def mi_error_404(request,exception=None):
     return render(request, 'errores/404.html',None,None,404)
+def mi_error_500(request, exception=None):
+    return render (request, 'errores/500.html',None, None,500)

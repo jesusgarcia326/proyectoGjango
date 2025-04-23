@@ -46,12 +46,12 @@
           {% if request.user.rol == 2 %}
             <!-- Solo cliente -->
             <li class="nav-item">
-              <a class="btn btn-outline-light me-2" href="{% url 'perfil_cliente' %}">Perfil Cliente</a>
+              <a class="btn btn-outline-light me-2" href="{% url 'perfil_cliente' id_cliente=request.user.cliente.id %}">Perfil Cliente</a>
             </li>
           {% elif request.user.rol == 3 %}
             <!-- Solo vendedor -->
             <li class="nav-item">
-              <a class="btn btn-outline-light me-2" href="{% url 'perfil_vendedor' %}">Perfil Vendedor</a>
+              <a class="btn btn-outline-light me-2" href="{% url 'perfil_vendedor' id_vendedor=request.user.vendedor.id %}">Perfil Vendedor</a>
             </li>
           {% endif %}
 
