@@ -78,7 +78,7 @@ def eliminar_entrada (request,entrada_id):
     return redirect('vista_entrada')
 
 def vista_discoteca(request):
-    listado_discotecas = Discoteca.objects.all()
+    listado_discotecas = Discoteca.objects.filter(vendedor=request.user.vendedor).all()
     return render(request, 'discoteca/vista_discoteca.html', {'discotecas_mostrar': listado_discotecas})
 
 def crear_discoteca(request):
@@ -269,6 +269,35 @@ def eliminar_datos_vendedor(request, datos_id):
     messages.success(request, "Datos eliminados correctamente")
     return redirect('perfil_vendedor',id_vendedor=request.user.vendedor.id)
 
+
+
+def crear_inventario(request):
+    if request.method == 'POST':
+        form = InventarioModelForm(request.POST,request=request)
+        if form.is_valid():
+            try:
+                datos = Inventario.objects.create(
+                    discoteca=form.cleaned_data.get('discoteca'),
+                    entrada=form.cleaned_data.get('entrada'),
+                    stock=form.cleaned_data.get('stock'),
+                )
+                inventario = Inventario.objects.filter(discoteca = form.cleaned_data.self, entrada = form.cleaned_data.self)
+                
+                if(inventario in None):
+                    datos.save()
+                else:
+                    inventario.stock+= form.cleaned_data.self("stock")
+                    inventarion.save()
+                
+                messages.success(request, "Se a añadoto a la tienda el produucto")
+                return redirect('perfil_vendedor')
+            except Exception as error:
+                print(error)
+                messages.error(request, "Ha ocurrido un error ")
+    else:
+        form = InventarioModelForm(None,request=request)
+
+    return render(request, 'inventario/crear_inventario.html', {'form': form})
 
 #ERORES
 def mi_error_404(request,exception=None):

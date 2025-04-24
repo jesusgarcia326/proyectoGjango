@@ -31,6 +31,9 @@ class Entrada(models.Model):
     nombre = models.CharField(max_length=100)
     fecha = models.DateTimeField(default=timezone.now)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    def __str__(self):
+        return self.nombre
 
 class Discoteca(models.Model):
     nombre = models.CharField(max_length=100)
@@ -38,6 +41,11 @@ class Discoteca(models.Model):
     aforo = models.IntegerField()
     
     vendedor = models.ForeignKey(Vendedor,on_delete= models.CASCADE,default=None,null=True)
+    entrada = models.ManyToManyField(Entrada, through='Inventario')
+    
+    def __str__(self):
+        return self.nombre
+    
    
 class Banco(models.Model):
     cliente = models.OneToOneField(Cliente, on_delete = models.CASCADE)
@@ -57,4 +65,11 @@ class Banco(models.Model):
 class DatosVendedor(models.Model):
     vendedor = models.OneToOneField(Vendedor, on_delete=models.CASCADE)
     direccion = models.CharField(max_length=255)
-    facturacion = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)   
+    facturacion = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)  
+    
+    
+    
+class Inventario(models.Model):
+    discoteca = models.ForeignKey(Discoteca, on_delete=models.CASCADE)
+    entrada = models.ForeignKey(Entrada, on_delete=models.CASCADE)
+    stock = models.PositiveIntegerField(default=0)

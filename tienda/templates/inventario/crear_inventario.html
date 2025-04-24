@@ -1,0 +1,17 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+  <div class="container mt-5">
+    <h2 class="mb-4">Crear Inventario</h2>
+
+    <form method="post">
+      {% load django_bootstrap5 %}
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div class="mt-3">
+        {% bootstrap_button "Guardar cuenta" button_type="submit" button_class="btn-success" %}
+        <a href="{% url 'crear_inventario'  %}" class="btn btn-secondary">Cancelar</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

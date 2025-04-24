@@ -119,3 +119,29 @@ class DatosVendedorModelForm(ModelForm):
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
             'facturacion': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+        
+
+class InventarioModelForm(ModelForm):
+    
+    def __init__(self,*args, **kwargs):
+        self.request = kwargs.pop("request")
+        super(InventarioModelForm,self).__init__(self,*args, **kwargs)
+        discotecasdisponibles = Discoteca.objects.filter(vendedor=self.request.user.vendedor).all()
+        self.fields["discoteca"] = forms.ModelChoiceField(
+            queryset=discotecasdisponibles,
+            widget=forms.Select,
+            required=True,
+            empty_label="Ninguna"
+        )
+    
+    class Meta:
+        model = Inventario
+        fields = ['discoteca', 'entrada','stock']
+        labels = {
+            'discoteca': 'Discoteca',
+            'entrada': 'Entrada',
+            'stock': 'Stock'
+        }
+        widgets = {
+            'stock': forms.NumberInput(attrs={'class': 'form-control'}),
+        }

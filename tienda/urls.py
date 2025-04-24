@@ -26,6 +26,8 @@ urlpatterns = [
     path('datosvendedor/crear', views.crear_datos_vendedor, name='crear_datos_vendedor'),
     path('datosvendedor/<int:datos_id>/editar', views.editar_datos_vendedor, name='editar_datos_vendedor'),
     path('datosvendedor/<int:datos_id>/eliminar', views.eliminar_datos_vendedor, name='eliminar_datos_vendedor'),
+    path('crear/inventario', views.crear_inventario, name='crear_inventario'),
+    
 
     
     #path('logout/', auth_views.LogoutView.as_view(next_page='inicio'), name='logout'),
