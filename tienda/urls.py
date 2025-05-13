@@ -27,6 +27,17 @@ urlpatterns = [
     path('datosvendedor/<int:datos_id>/editar', views.editar_datos_vendedor, name='editar_datos_vendedor'),
     path('datosvendedor/<int:datos_id>/eliminar', views.eliminar_datos_vendedor, name='eliminar_datos_vendedor'),
     path('crear/inventario', views.crear_inventario, name='crear_inventario'),
+    path('discoteca/<int:discoteca_id>/productos/', views.lista_productos, name='lista_productos'),
+    path('producto/<int:id_producto>/ver/', views.ver_producto, name='ver_producto'),
+    path('editar/<int:id_producto>/producto/', views.editar_producto, name='editar_producto'),
+    path('eliminar/<int:id_producto>/producto/', views.eliminar_producto, name='eliminar_producto'),
+    #path('editar/<int:id_producto>/producto/', views.editar_producto, name='productos_editar'),
+    path('buscar_productos/', views.buscarProductos, name='buscar_productos'),
+    path('crear/pedidos/', views.crear_pedidos, name='crear_pedidos'),
+
+
+
+
     
 
     

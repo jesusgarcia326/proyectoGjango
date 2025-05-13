@@ -1,0 +1,40 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+<div class="mb-3 text-end">
+    <a href="{% url 'buscar_productos' %}" class="btn btn-info">Buscar producto</a>
+</div>
+  <h2 class="mb-4 text-center">Listado de Productos</h2>
+
+  {% if productos %}
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">Entrada</th>
+          <th scope="col">Stock</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for producto in productos %}
+        <tr>
+          <td>{{ producto.entrada }}</td>
+          <td>{{ producto.stock }}</td>
+          <td>
+            <a class="btn btn-outline-primary" href="{% url 'editar_producto' producto.id %}">Editar</a>
+            <a class="btn btn-outline-danger" href="{% url 'eliminar_producto' producto.id %}">Eliminar</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info text-center" role="alert">
+    No hay productos disponibles en esta discoteca.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

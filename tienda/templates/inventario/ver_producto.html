@@ -1,0 +1,13 @@
+{% extends "estructura/principal.html" %}
+
+{% block contenido %}
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Detalle del Producto</h2>
+    <ul class="list-group">
+      <li class="list-group-item"><strong>Entrada:</strong> {{ producto.entrada }}</li>
+      <li class="list-group-item"><strong>Stock:</strong> {{ producto.stock }}</li>
+      <li class="list-group-item"><strong>Discoteca:</strong> {{ producto.discoteca.nombre }}</li>
+    </ul>
+    <a href="{% url 'lista_productos' tienda_id=producto.discoteca.id %}" class="btn btn-secondary mt-3">Volver</a>
+  </div>
+{% endblock contenido %}

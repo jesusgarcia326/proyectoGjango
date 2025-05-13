@@ -120,9 +120,16 @@ def editar_discoteca (request,jaimito):
 
 
 def index(request):
-    if("fecha_inicio" not in request.session):
+    if "fecha_inicio" not in request.session:
         request.session["fecha_inicio"] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
-    return render(request, 'index.html')
+
+    discoteca = None
+    if request.user.is_authenticated and hasattr(request.user, 'vendedor'):
+        discoteca = Discoteca.objects.filter(vendedor=request.user.vendedor).first()
+
+    return render(request, 'index.html', {'discoteca': discoteca})
+
+
 
 def registrar_usuario(request):
     if request.method == 'POST':
@@ -273,31 +280,98 @@ def eliminar_datos_vendedor(request, datos_id):
 
 def crear_inventario(request):
     if request.method == 'POST':
-        form = InventarioModelForm(request.POST,request=request)
-        if form.is_valid():
+        formulario = InventarioModelForm(request.POST, request=request)
+        if formulario.is_valid():
             try:
-                datos = Inventario.objects.create(
-                    discoteca=form.cleaned_data.get('discoteca'),
-                    entrada=form.cleaned_data.get('entrada'),
-                    stock=form.cleaned_data.get('stock'),
-                )
-                inventario = Inventario.objects.filter(discoteca = form.cleaned_data.self, entrada = form.cleaned_data.self)
-                
-                if(inventario in None):
-                    datos.save()
+                discoteca = formulario.cleaned_data.get('discoteca')
+                entrada = formulario.cleaned_data.get('entrada')
+                stock = formulario.cleaned_data.get('stock')
+
+                inventario = Inventario.objects.filter(discoteca=discoteca, entrada=entrada).first()
+
+                if inventario is None:
+                    formulario.save()
                 else:
-                    inventario.stock+= form.cleaned_data.self("stock")
-                    inventarion.save()
-                
-                messages.success(request, "Se a añadoto a la tienda el produucto")
+                    inventario.stock += stock
+                    inventario.save()
+
+                messages.success(request, "Se ha añadido a la tienda el producto")
                 return redirect('perfil_vendedor')
             except Exception as error:
                 print(error)
-                messages.error(request, "Ha ocurrido un error ")
+                messages.error(request, "Ha ocurrido un error")
     else:
-        form = InventarioModelForm(None,request=request)
+        formulario = InventarioModelForm(None, request=request)
 
-    return render(request, 'inventario/crear_inventario.html', {'form': form})
+    return render(request, 'inventario/crear_inventario.html', {'form': formulario})
+
+# views.py
+def lista_productos(request, discoteca_id):
+    productos = Inventario.objects.filter(discoteca_id=discoteca_id)
+    return render(request, 'inventario/lista_productos.html', {'productos': productos})
+
+def ver_producto(request, id_producto):
+    try:
+        producto = Inventario.objects.get(id=id_producto)
+    except Inventario.DoesNotExist:
+        raise Http404("Producto no encontrado")
+    
+    return render(request, 'inventario/ver_producto.html', {'producto': producto})
+
+
+def editar_producto(request, id_producto):
+    producto = Inventario.objects.get(id=id_producto)
+
+    if request.method == 'POST':
+        formulario = InventarioModelForm(request.POST, request=request, instance=producto)
+        if formulario.is_valid():
+            formulario.save()
+            messages.success(request, "Producto actualizado correctamente")
+            return redirect('lista_productos', discoteca_id=producto.discoteca.id)
+
+    else:
+        formulario = InventarioModelForm(request=request, instance=producto)
+    
+    return render(request, 'inventario/editar_producto.html', {'formulario': formulario, 'producto': producto})
+
+
+def eliminar_producto(request, id_producto):
+    producto = Inventario.objects.get(id=id_producto)
+    tienda_id = producto.discoteca.id
+    producto.delete()
+    messages.success(request, "Producto eliminado correctamente")
+    return redirect('lista_productos', discoteca_id=producto.discoteca.id)
+
+
+def buscarProductos(request):
+    formulario = BusquedaInventario(request.GET or None)
+    productos = Inventario.objects.all()
+
+    if request.GET and formulario.is_valid():
+        nombre = formulario.cleaned_data.get("nombre")
+        productos = Inventario.objects.filter(entrada__nombre__icontains=nombre)
+
+    return render(request, 'inventario/buscar_productos.html', {
+        'productos': productos,
+        'formulario': formulario
+    })
+
+
+def crear_pedidos(request):
+    if request.method == 'POST':
+        formulario = CrearPedidoForms(request.POST)
+        if formulario.is_valid():
+            pedido = formulario.save(commit=False)
+            pedido.fecha_pedido = timezone.now()
+            pedido.cliente = request.user.cliente
+            pedido.save()
+            messages.success(request, 'Se ha creado su pedido correctamente')
+            return redirect('inicio')
+    else:
+        formulario = CrearPedidoForms()
+
+    return render(request, 'cliente/crear_pedidos.html', {'formulario': formulario})
+
 
 #ERORES
 def mi_error_404(request,exception=None):

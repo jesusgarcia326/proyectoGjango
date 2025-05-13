@@ -73,3 +73,12 @@ class Inventario(models.Model):
     discoteca = models.ForeignKey(Discoteca, on_delete=models.CASCADE)
     entrada = models.ForeignKey(Entrada, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
+
+
+
+class Pedidos(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    entrada = models.ForeignKey(Entrada, on_delete=models.CASCADE)  # ← CAMBIO
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
+    cantidad = models.PositiveIntegerField(default=1)
+    direccion = models.CharField(max_length=255)

@@ -18,6 +18,16 @@
           <a class="nav-link active" aria-current="page" href="{% url 'inicio' %}">Inicio</a>
         </li>
 
+        {% if discoteca %}
+        <li class="nav-item">
+          <a class="nav-link active" href="{% url 'lista_productos' discoteca.id %}">Lista Productos</a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'crear_pedidos' %}">Crear Pedido</a>
+        </li>
+        
 
         <li class="nav-item">
           <a class="nav-link active" href="{% url 'crear_inventario' %}">Crear Inventario</a>

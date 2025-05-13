@@ -122,21 +122,9 @@ class DatosVendedorModelForm(ModelForm):
         
 
 class InventarioModelForm(ModelForm):
-    
-    def __init__(self,*args, **kwargs):
-        self.request = kwargs.pop("request")
-        super(InventarioModelForm,self).__init__(self,*args, **kwargs)
-        discotecasdisponibles = Discoteca.objects.filter(vendedor=self.request.user.vendedor).all()
-        self.fields["discoteca"] = forms.ModelChoiceField(
-            queryset=discotecasdisponibles,
-            widget=forms.Select,
-            required=True,
-            empty_label="Ninguna"
-        )
-    
     class Meta:
         model = Inventario
-        fields = ['discoteca', 'entrada','stock']
+        fields = ['discoteca', 'entrada', 'stock']
         labels = {
             'discoteca': 'Discoteca',
             'entrada': 'Entrada',
@@ -144,4 +132,37 @@ class InventarioModelForm(ModelForm):
         }
         widgets = {
             'stock': forms.NumberInput(attrs={'class': 'form-control'}),
+            'entrada': forms.Select(attrs={'class': 'form-control'}),
+            # 'discoteca' lo sobrescribimos en __init__
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super().__init__(*args, **kwargs)
+
+        if self.request and hasattr(self.request.user, 'vendedor'):
+            discotecasdisponibles = Discoteca.objects.filter(vendedor=self.request.user.vendedor)
+        else:
+            discotecasdisponibles = Discoteca.objects.none()
+
+        self.fields['discoteca'] = forms.ModelChoiceField(
+            queryset=discotecasdisponibles,
+            widget=forms.Select(attrs={'class': 'form-control'}),
+            required=True,
+            empty_label="Ninguna"
+        )
+
+class BusquedaInventario(forms.Form):
+    nombre = forms.CharField(label="Nombre de la entrada", required=False)
+
+
+class CrearPedidoForms(forms.ModelForm):
+    class Meta:
+        model = Pedidos
+        fields = ['entrada', 'cantidad', 'direccion']
+        help_texts = {
+            'entrada': "Elija la entrada que desea",
+        }
+        widgets = {
+            'fecha_pedido': forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"})
         }
