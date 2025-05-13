@@ -30,7 +30,7 @@ class Cliente(models.Model):
 class Entrada(models.Model):
     nombre = models.CharField(max_length=100)
     fecha = models.DateTimeField(default=timezone.now)
-    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    
     
     def __str__(self):
         return self.nombre
@@ -73,6 +73,7 @@ class Inventario(models.Model):
     discoteca = models.ForeignKey(Discoteca, on_delete=models.CASCADE)
     entrada = models.ForeignKey(Entrada, on_delete=models.CASCADE)
     stock = models.PositiveIntegerField(default=0)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 

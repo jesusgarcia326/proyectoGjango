@@ -21,16 +21,14 @@ class RegistroForm(UserCreationForm):
 class EntradaModelForm(ModelForm):
     class Meta:
         model = Entrada 
-        fields = ['nombre', 'fecha', 'precio']
+        fields = ['nombre', 'fecha']
         labels = {
             "nombre":("Nombre de la fiesta"),
             "fecha":("Fecha de la fiesta"),
-            "precio":("Precio de la entrada")
         }
         help_texts = {
             "nombre":("Nombre corto y decriptivo"),
             "fecha":("Dia y horade la fiesta"),
-            "precio":("Precio sin decimales")
         }
         widgets = {
             'fecha': forms.DateInput(format="%Y-%m-%d" ,attrs={'type': 'date', 'class': 'form-control'}),
@@ -41,7 +39,6 @@ class EntradaModelForm(ModelForm):
 
         nombre = cleaned_data.get('nombre')
         fecha = cleaned_data.get('fecha')
-        precio = cleaned_data.get('precio')
 
         if nombre and len(nombre) < 5:
             self.add_error('nombre', 'Escribe un nombre más grande, pisha')
@@ -49,8 +46,6 @@ class EntradaModelForm(ModelForm):
         if fecha and fecha.date() < datetime.date.today():
             self.add_error('fecha', 'La fecha no puede estar en el pasado, pisha')
 
-        if precio is not None and precio > 50:
-            self.add_error('precio', 'El precio no puede ser mayor a 50')
 
         return cleaned_data
     
@@ -124,11 +119,12 @@ class DatosVendedorModelForm(ModelForm):
 class InventarioModelForm(ModelForm):
     class Meta:
         model = Inventario
-        fields = ['discoteca', 'entrada', 'stock']
+        fields = ['discoteca', 'entrada', 'stock','precio']
         labels = {
             'discoteca': 'Discoteca',
             'entrada': 'Entrada',
-            'stock': 'Stock'
+            'stock': 'Stock',
+            "precio":("Precio de la entrada")
         }
         widgets = {
             'stock': forms.NumberInput(attrs={'class': 'form-control'}),
