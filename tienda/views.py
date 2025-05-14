@@ -122,6 +122,9 @@ def editar_discoteca (request,jaimito):
 def index(request):
     if "fecha_inicio" not in request.session:
         request.session["fecha_inicio"] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
+        
+    vista_producto_cliente = Inventario.objects.all()
+    return render(request, 'index.html', {'vista_producto_cliente': vista_producto_cliente})
 
     discoteca = None
     if request.user.is_authenticated and hasattr(request.user, 'vendedor'):
@@ -371,6 +374,9 @@ def crear_pedidos(request):
         formulario = CrearPedidoForms()
 
     return render(request, 'cliente/crear_pedidos.html', {'formulario': formulario})
+
+
+
 
 
 #ERORES
