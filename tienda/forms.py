@@ -155,10 +155,20 @@ class BusquedaInventario(forms.Form):
 class CrearPedidoForms(forms.ModelForm):
     class Meta:
         model = Pedidos
-        fields = ['entrada', 'cantidad', 'direccion']
+        fields = ['inventario', 'cantidad', 'direccion']
         help_texts = {
-            'entrada': "Elija la entrada que desea",
+            'inventario': "Elija la entrada que desea",
         }
         widgets = {
             'fecha_pedido': forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"})
+        }
+
+
+class PedidoModelForm(forms.ModelForm):
+    class Meta:
+        model = Pedidos
+        fields = ['cantidad', 'direccion']
+        widgets = {
+            'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
         }

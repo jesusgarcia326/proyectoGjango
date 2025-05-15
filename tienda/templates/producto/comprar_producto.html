@@ -1,0 +1,36 @@
+{% extends "estructura/principal.html" %}
+
+{% block titulo %}
+<title>Comprar Producto</title>
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Confirmar compra</h2>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ inventario.discoteca }}</h5>
+            <p class="card-text">
+                <strong>Entrada:</strong> {{ inventario.entrada }}<br>
+                <strong>Precio:</strong> {{ inventario.precio }} euros<br>
+                <strong>Stock disponible:</strong> {{ inventario.stock }}
+            </p>
+        </div>
+    </div>
+
+    <form method="post" class="mt-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.cantidad.label_tag }}
+            {{ form.cantidad }}
+        </div>
+        <div class="mb-3">
+            {{ form.direccion.label_tag }}
+            {{ form.direccion }}
+        </div>
+        <button type="submit" class="btn btn-primary">Confirmar pedido</button>
+        <a href="{% url 'inicio' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -8,6 +8,7 @@ from .forms import *
 from django.contrib import messages #esto para los mensajes cuando eduitas o haces algo 
 from django.contrib.auth import login
 from django.http import Http404
+from django.db import transaction
 
 
 
@@ -16,22 +17,23 @@ from django.http import Http404
 
 
 # Create your views here.
+
 @permission_required('tienda.view_cliente')
 def vista_cliente(request):
     listado_clientes= Cliente.objects.all()
     return render(request, 'cliente/vista_cliente.html', {'clientes_mostrar': listado_clientes})
 
-
-
+@permission_required('tienda.view_vendedor')
 def vista_vendedor(request):
     listado_vendedores= Vendedor.objects.all()
     return render(request, 'vendedor/vista_vendedor.html', {'vendedores_mostrar': listado_vendedores})
 
+@permission_required('tienda.view_entrada')
 def vista_entradas(request):
     entradas = Entrada.objects.all().order_by('-fecha')
     return render(request, 'entrada/vista_entrada.html', {'entradas_mostrar': entradas})
 
-
+@permission_required('tienda.add_entrada')
 def crear_entrada(request):
     if request.method == 'POST':
         form = EntradaModelForm(request.POST)
@@ -50,7 +52,7 @@ def dame_entrada(request,pepito):
     return render(request, 'entrada/dame_entrada.html', {'entrada': entradas})
 
 
-
+@permission_required('tienda.change_entrada')
 def editar_entrada (request,pepito):
     entrada = Entrada.objects.get(id=pepito)
     if request.method == 'POST':
@@ -67,6 +69,8 @@ def editar_entrada (request,pepito):
         form = EntradaModelForm(instance=entrada)
     return render(request, 'entrada/editar_entrada.html', {'form': form, "entrada": entrada})
 
+
+@permission_required('tienda.delete_entrada')
 def eliminar_entrada (request,entrada_id):
     entrada = Entrada.objects.get(id=entrada_id)
     try:
@@ -77,10 +81,14 @@ def eliminar_entrada (request,entrada_id):
         print(capturo_error)
     return redirect('vista_entrada')
 
+
+@permission_required('tienda.view_discoteca')
 def vista_discoteca(request):
     listado_discotecas = Discoteca.objects.filter(vendedor=request.user.vendedor).all()
     return render(request, 'discoteca/vista_discoteca.html', {'discotecas_mostrar': listado_discotecas})
 
+
+@permission_required('tienda.add_discoteca')
 def crear_discoteca(request):
     if request.method == 'POST':
         form = DiscotecaModelForm(request.POST)
@@ -98,10 +106,13 @@ def crear_discoteca(request):
         form = DiscotecaModelForm()
     return render(request, 'formulario_discoteca/formulario_discoteca.html', {'form': form})
 
+
+@permission_required('tienda.view_discoteca')
 def dame_discoteca(request,jaimito):
     discoteca = Discoteca.objects.get(id=jaimito)
     return render(request, 'discoteca/dame_discoteca.html', {'discoteca': discoteca})
 
+@permission_required('tienda.change_discoteca')
 def editar_discoteca (request,jaimito):
     discoteca = Discoteca.objects.get(id=jaimito)
     if request.method == 'POST':
@@ -119,18 +130,13 @@ def editar_discoteca (request,jaimito):
     return render(request, 'discoteca/editar_discoteca.html', {'form': form, "discoteca": discoteca})
 
 
+
 def index(request):
     if "fecha_inicio" not in request.session:
         request.session["fecha_inicio"] = datetime.datetime.now().strftime('%d/%m/%Y %H:%M')
         
     vista_producto_cliente = Inventario.objects.all()
     return render(request, 'index.html', {'vista_producto_cliente': vista_producto_cliente})
-
-    discoteca = None
-    if request.user.is_authenticated and hasattr(request.user, 'vendedor'):
-        discoteca = Discoteca.objects.filter(vendedor=request.user.vendedor).first()
-
-    return render(request, 'index.html', {'discoteca': discoteca})
 
 
 
@@ -189,6 +195,7 @@ def perfil_vendedor(request, id_vendedor):
         raise Http404()
 
 
+@permission_required('tienda.add_banco')
 def crear_banco(request):
     if request.method == 'POST':
         form = BancoModelForm(request.POST)
@@ -212,6 +219,7 @@ def crear_banco(request):
     return render(request, 'banco/crear_banco.html', {'form': form})
 
 
+@permission_required('tienda.change_banco')
 def editar_banco(request, banco_id):
     banco = Banco.objects.get(id=banco_id)
     if request.method == 'POST':
@@ -225,7 +233,7 @@ def editar_banco(request, banco_id):
     return render(request, 'banco/editar_banco.html', {'form': form})
 
 
-
+@permission_required('tienda.delete_banco')
 def eliminar_banco(request, banco_id):
     banco = Banco.objects.get(id=banco_id)
     cliente_id = banco.cliente.id
@@ -234,6 +242,7 @@ def eliminar_banco(request, banco_id):
     return redirect('perfil_cliente',id_cliente=request.user.cliente.id)
 
 
+@permission_required('tienda.add_datosvendedor')
 def crear_datos_vendedor(request):
     if request.method == 'POST':
         form = DatosVendedorModelForm(request.POST)
@@ -260,6 +269,7 @@ def vista_datos_vendedor(request):
     return render(request, 'datos_vendedor/vista.html', {'datos_vendedor': datos})
 
 
+@permission_required('tienda.change_datosvendedor')
 def editar_datos_vendedor(request, datos_id):
     datos = DatosVendedor.objects.get(id=datos_id)
     if request.method == 'POST':
@@ -273,6 +283,7 @@ def editar_datos_vendedor(request, datos_id):
     return render(request, 'datos_vendedor/editar.html', {'form': form})
 
 
+@permission_required('tienda.delete_datosvendedor')
 def eliminar_datos_vendedor(request, datos_id):
     datos = DatosVendedor.objects.get(id=datos_id)
     datos.delete()
@@ -280,7 +291,7 @@ def eliminar_datos_vendedor(request, datos_id):
     return redirect('perfil_vendedor',id_vendedor=request.user.vendedor.id)
 
 
-
+@permission_required('tienda.add_inventario')
 def crear_inventario(request):
     if request.method == 'POST':
         formulario = InventarioModelForm(request.POST, request=request)
@@ -308,11 +319,17 @@ def crear_inventario(request):
 
     return render(request, 'inventario/crear_inventario.html', {'form': formulario})
 
-# views.py
-def lista_productos(request, discoteca_id):
-    productos = Inventario.objects.filter(discoteca_id=discoteca_id)
+
+@permission_required('tienda.view_inventario')
+def lista_productos(request, vendedor_id):
+    if request.user.vendedor.id != vendedor_id:
+        raise Http404("Paguina no encontrada Error 404")
+
+    productos = Inventario.objects.filter(discoteca__vendedor=request.user.vendedor)
     return render(request, 'inventario/lista_productos.html', {'productos': productos})
 
+
+@permission_required('tienda.view_inventario')
 def ver_producto(request, id_producto):
     try:
         producto = Inventario.objects.get(id=id_producto)
@@ -322,6 +339,7 @@ def ver_producto(request, id_producto):
     return render(request, 'inventario/ver_producto.html', {'producto': producto})
 
 
+@permission_required('tienda.change_inventario')
 def editar_producto(request, id_producto):
     producto = Inventario.objects.get(id=id_producto)
 
@@ -330,7 +348,7 @@ def editar_producto(request, id_producto):
         if formulario.is_valid():
             formulario.save()
             messages.success(request, "Producto actualizado correctamente")
-            return redirect('lista_productos', discoteca_id=producto.discoteca.id)
+            return redirect('lista_productos', vendedor_id=producto.discoteca.vendedor.id)
 
     else:
         formulario = InventarioModelForm(request=request, instance=producto)
@@ -338,12 +356,12 @@ def editar_producto(request, id_producto):
     return render(request, 'inventario/editar_producto.html', {'formulario': formulario, 'producto': producto})
 
 
+@permission_required('tienda.delete_inventario')
 def eliminar_producto(request, id_producto):
     producto = Inventario.objects.get(id=id_producto)
-    tienda_id = producto.discoteca.id
     producto.delete()
     messages.success(request, "Producto eliminado correctamente")
-    return redirect('lista_productos', discoteca_id=producto.discoteca.id)
+    return redirect('lista_productos', vendedor_id=producto.discoteca.vendedor.id)
 
 
 def buscarProductos(request):
@@ -360,6 +378,7 @@ def buscarProductos(request):
     })
 
 
+@permission_required('tienda.add_pedidos')
 def crear_pedidos(request):
     if request.method == 'POST':
         formulario = CrearPedidoForms(request.POST)
@@ -376,11 +395,44 @@ def crear_pedidos(request):
     return render(request, 'cliente/crear_pedidos.html', {'formulario': formulario})
 
 
+@permission_required('tienda.add_pedidos')
+def comprar_producto(request, id_inventario):
+    try:
+        inventario = Inventario.objects.get(id=id_inventario)
+    except Inventario.DoesNotExist:
+        raise Http404("El producto no existe")
 
+    if request.method == 'POST':
+        form = PedidoModelForm(request.POST)
+        if form.is_valid():
+            cantidad = form.cleaned_data.get('cantidad')
+            direccion = form.cleaned_data.get('direccion')
 
+            if cantidad > inventario.stock:
+                messages.error(request, "No hay suficiente stock disponible.")
+            else:
+                pedido = Pedidos.objects.create(
+                    cliente=request.user.cliente,
+                    inventario=inventario,
+                    cantidad=cantidad,
+                    direccion=direccion
+                )
+                pedido.save()
+                inventario.stock -= cantidad
+                inventario.save()
+                messages.success(request, "¡Pedido realizado con éxito!")
+                return redirect('inicio')
+    else:
+        form = PedidoModelForm()
+
+    return render(request, 'producto/comprar_producto.html', {
+        'form': form,
+        'inventario': inventario
+    })
 
 #ERORES
-def mi_error_404(request,exception=None):
-    return render(request, 'errores/404.html',None,None,404)
-def mi_error_500(request, exception=None):
-    return render (request, 'errores/500.html',None, None,500)
+def mi_error_404(request, exception):
+    return render(request, 'errores/404.html', status=404)
+
+def mi_error_500(request):
+    return render(request, 'errores/500.html', status=500)

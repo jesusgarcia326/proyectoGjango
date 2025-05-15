@@ -25,5 +25,5 @@ urlpatterns = [
     
 ]
 
-from django.conf.urls import handler404
+
 handler404 = "tienda.views.mi_error_404"

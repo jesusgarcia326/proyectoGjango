@@ -1,10 +1,10 @@
 {% extends "estructura/principal.html" %}
+
 {% block contenido %}
-  
-    <h1 class="mb-4 text-center">Error 404</h1>
-    <div>
-        <p>La paguna que intenta acceder no existe </p>
-    </div>
-
-
+  <div class="container text-center mt-5">
+    <h1 class="display-3 text-danger">⚠️ 404</h1>
+    <h2 class="text-warning">Página no encontrada</h2>
+    <p>{{ mensaje }}</p>
+    <a href="{% url 'inicio' %}" class="btn btn-primary mt-3">Volver al inicio</a>
+  </div>
 {% endblock %}
