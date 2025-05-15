@@ -403,7 +403,7 @@ def comprar_producto(request, id_inventario):
         raise Http404("El producto no existe")
 
     if request.method == 'POST':
-        form = PedidoModelForm(request.POST)
+        form = PedidoModelForm(request.POST,inventario = inventario)
         if form.is_valid():
             cantidad = form.cleaned_data.get('cantidad')
             direccion = form.cleaned_data.get('direccion')
@@ -423,7 +423,7 @@ def comprar_producto(request, id_inventario):
                 messages.success(request, "¡Pedido realizado con éxito!")
                 return redirect('inicio')
     else:
-        form = PedidoModelForm()
+        form = PedidoModelForm(inventario = inventario)
 
     return render(request, 'producto/comprar_producto.html', {
         'form': form,

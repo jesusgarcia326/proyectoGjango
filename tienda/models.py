@@ -77,7 +77,7 @@ class Inventario(models.Model):
 
 class Pedidos(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    inventario = models.ForeignKey(Inventario, on_delete=models.CASCADE)  # 👈 CLAVE
+    inventario = models.ForeignKey(Inventario, on_delete=models.CASCADE) 
     fecha_pedido = models.DateTimeField(auto_now_add=True)
     cantidad = models.PositiveIntegerField(default=1)
     direccion = models.CharField(max_length=255)

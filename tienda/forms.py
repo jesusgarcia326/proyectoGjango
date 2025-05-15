@@ -172,3 +172,18 @@ class PedidoModelForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={'class': 'form-control'}),
             'direccion': forms.TextInput(attrs={'class': 'form-control'}),
         }
+        
+    def __init__(self, *args, **kwargs):
+        self.inventario= kwargs.pop("inventario")
+        super(PedidoModelForm,self).__init__(*args, **kwargs)
+        
+    def clean(self):
+        cleaned_data = super().clean()
+
+        cantidad = cleaned_data.get('cantidad')
+        
+        if cantidad > self.inventario.stock:
+            self.add_error('cantidad', 'te has cola')
+        
+
+        return cleaned_data

@@ -21,14 +21,9 @@
 
     <form method="post" class="mt-4">
         {% csrf_token %}
-        <div class="mb-3">
-            {{ form.cantidad.label_tag }}
-            {{ form.cantidad }}
-        </div>
-        <div class="mb-3">
-            {{ form.direccion.label_tag }}
-            {{ form.direccion }}
-        </div>
+        {% load django_bootstrap5 %}
+        {% bootstrap_form form %}
+    
         <button type="submit" class="btn btn-primary">Confirmar pedido</button>
         <a href="{% url 'inicio' %}" class="btn btn-secondary">Cancelar</a>
     </form>
