@@ -77,7 +77,24 @@ class Inventario(models.Model):
 
 class Pedidos(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    inventario = models.ForeignKey(Inventario, on_delete=models.CASCADE) 
-    fecha_pedido = models.DateTimeField(auto_now_add=True)
-    cantidad = models.PositiveIntegerField(default=1)
     direccion = models.CharField(max_length=255)
+    fecha_pedido = models.DateTimeField(auto_now_add=True)
+    Estado = [
+        ("Pen", "Pendiente"),
+        ("Rea", "Realizado"),
+        ("Anu", "Anulado"),
+    ]
+    estado = models.CharField(
+        max_length=10,
+        choices=Estado,
+        default="Pen"
+    )
+
+
+
+class LineaPedido(models.Model):
+    discoteca = models.ForeignKey(Discoteca, on_delete=models.CASCADE)
+    entrada = models.ForeignKey(Entrada, on_delete=models.CASCADE)
+    precio = models.PositiveIntegerField(default=0)
+    cantidad = models.PositiveIntegerField(default=1)
+    pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE)

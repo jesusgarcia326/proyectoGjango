@@ -405,6 +405,45 @@ def comprar_producto(request, id_inventario):
     if request.method == 'POST':
         form = PedidoModelForm(request.POST,inventario = inventario)
         if form.is_valid():
+            try:
+                cantidad= form.cleaned_data.get('discoteca')
+                pedidos= Pedidos.objects.filter(id_inventario= id_inventario, entrada=entrada).first()
+
+                if inventario is None:
+                    formulario.save()
+                else:
+                    inventario.stock += stock
+                    inventario.save()
+
+                messages.success(request, "Se ha añadido a la tienda el producto")
+                return redirect('perfil_vendedor')
+            except Exception as error:
+                print(error)
+                messages.error(request, "Ha ocurrido un error")
+        form = PedidoModelForm(inventario = inventario)
+
+    return render(request, 'producto/comprar_producto.html', {
+        'form': form,
+        'inventario': inventario
+    })
+
+#ERORES
+def mi_error_404(request, exception):
+    return render(request, 'errores/404.html', status=404)
+
+def mi_error_500(request):
+    return render(request, 'errores/500.html', status=500)
+
+
+def comprar_producto_antigua(request, id_inventario):
+    try:
+        inventario = Inventario.objects.get(id=id_inventario)
+    except Inventario.DoesNotExist:
+        raise Http404("El producto no existe")
+
+    if request.method == 'POST':
+        form = PedidoModelForm(request.POST,inventario = inventario)
+        if form.is_valid():
             cantidad = form.cleaned_data.get('cantidad')
             direccion = form.cleaned_data.get('direccion')
 
@@ -429,10 +468,3 @@ def comprar_producto(request, id_inventario):
         'form': form,
         'inventario': inventario
     })
-
-#ERORES
-def mi_error_404(request, exception):
-    return render(request, 'errores/404.html', status=404)
-
-def mi_error_500(request):
-    return render(request, 'errores/500.html', status=500)
